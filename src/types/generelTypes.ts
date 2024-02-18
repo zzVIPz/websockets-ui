@@ -4,9 +4,13 @@ export const enum RESPONSE_TYPES {
   START = 'start_game',
   TURN = 'turn',
   ATTACK = 'attack',
+  RANDOM_ATTACK = 'randomAttack',
   FINISH = 'finish',
+  CREATE_ROOM = 'create_room',
   UPDATE_ROOM = 'update_room',
   UPDATE_WINNERS = 'update_winners',
+  ADD_USER = 'add_user_to_room',
+  ADD_SHIPS = 'add_ships',
 }
 
 export interface User {
@@ -16,4 +20,8 @@ export interface User {
 
 export interface UserData extends User {
   index: number;
+}
+
+export interface Room {
+  indexRoom: number;
 }

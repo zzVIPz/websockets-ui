@@ -12,3 +12,7 @@ export interface UserDataPayload {
   error: boolean;
   errorText: string;
 }
+
+export interface RoomDataPayload {
+  indexRoom: number;
+}
