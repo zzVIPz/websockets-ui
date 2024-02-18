@@ -1,8 +1,8 @@
 import { WebSocketServer } from 'ws';
-import { print } from '../utils/print';
+import { getRandomNumber, print } from '../utils/index';
 import { RESPONSE_TYPES } from '../types/generelTypes';
 import { UserLoginRequest } from '../types/apiTypes';
-import { registration } from './controllers/registration';
+import { registration, createRoom, addUserToRoom } from './controllers/index';
 
 const wss = new WebSocketServer(
   {
@@ -12,19 +12,35 @@ const wss = new WebSocketServer(
 );
 
 wss.on('connection', (ws, req) => {
-  ws.on('error', (error) => console.log(error));
+  const connectionId = getRandomNumber();
 
+  ws.on('error', (error) => console.log(error));
   ws.on('message', (message) => {
     const { type, data }: UserLoginRequest = JSON.parse(message.toString());
-    const onSend = (response: string) => ws.send(response);
+    const callback = (response: string) => ws.send(response);
 
     switch (type) {
       case RESPONSE_TYPES.REG:
-        registration(JSON.parse(data), onSend);
+        registration({
+          connectionId,
+          data: JSON.parse(data),
+          callback,
+        });
+        break;
+      case RESPONSE_TYPES.CREATE_ROOM: {
+        const indexRoom = connectionId + Date.now();
+
+        createRoom(indexRoom);
+        addUserToRoom({
+          indexRoom,
+          callback,
+        });
+        break;
+      }
     }
   });
 
   ws.on('close', () => {
-    print('Client disconnected', 'blue');
+    print(`Client ${connectionId} disconnected`, 'blue');
   });
 });

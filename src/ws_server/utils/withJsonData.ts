@@ -1,7 +1,10 @@
-import { UserDataPayload } from '../../types/apiTypes';
+import { RoomDataPayload, UserDataPayload } from '../../types/apiTypes';
 import { RESPONSE_TYPES } from '../../types/generelTypes';
 
-const withJsonData = (type: RESPONSE_TYPES, data: UserDataPayload) =>
+const withJsonData = (
+  type: RESPONSE_TYPES,
+  data: UserDataPayload | RoomDataPayload
+) =>
   JSON.stringify({
     type,
     data: JSON.stringify(data),
