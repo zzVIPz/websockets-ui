@@ -1,9 +1,9 @@
 import { RoomDataPayload, UserDataPayload } from '../../types/apiTypes';
-import { RESPONSE_TYPES } from '../../types/generelTypes';
+import { RESPONSE_TYPES, Room } from '../../types/generelTypes';
 
 const withJsonData = (
   type: RESPONSE_TYPES,
-  data: UserDataPayload | RoomDataPayload
+  data: UserDataPayload | RoomDataPayload | Room[]
 ) =>
   JSON.stringify({
     type,

@@ -23,5 +23,6 @@ export interface UserData extends User {
 }
 
 export interface Room {
-  indexRoom: number;
+  roomId: number;
+  roomUsers: Omit<UserData, 'password'>[];
 }
