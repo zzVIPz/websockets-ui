@@ -1,4 +1,4 @@
-import { RESPONSE_TYPES } from './generelTypes';
+import { RESPONSE_TYPES, Ship } from './generalTypes';
 
 export interface UserLoginRequest {
   type: RESPONSE_TYPES;
@@ -6,18 +6,29 @@ export interface UserLoginRequest {
   id: number;
 }
 
-export interface UserDataPayload {
+export interface RoomDataRequestPayload {
+  indexRoom: number;
+}
+
+export interface ShipsDataRequestPayload {
+  gameId: number;
+  ships: Ship[];
+  indexPlayer: number;
+}
+
+export interface UserDataResponsePayload {
   name: string;
   index: number;
   error: boolean;
   errorText: string;
 }
 
-export interface RoomDataPayload {
-  indexRoom: number;
-}
-
-export interface GameDataPayload {
+export interface GameDataResponsePayload {
   idGame: number;
   idPlayer: number;
+}
+
+export interface ShipsDataResponsePayload {
+  ships: Ship[];
+  currentPlayerIndex: number;
 }

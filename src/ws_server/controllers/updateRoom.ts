@@ -1,5 +1,5 @@
 import { rooms } from '../../data/index';
-import { RESPONSE_TYPES } from '../../types/generelTypes';
+import { RESPONSE_TYPES } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 
 interface IUpdateRoom {

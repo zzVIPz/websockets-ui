@@ -1,6 +1,6 @@
 import WebSocket, { WebSocketServer } from 'ws';
 import { getRandomNumber, print } from '../utils/index';
-import { RESPONSE_TYPES } from '../types/generelTypes';
+import { RESPONSE_TYPES } from '../types/generalTypes';
 import { UserLoginRequest } from '../types/apiTypes';
 import {
   registration,
@@ -8,6 +8,7 @@ import {
   addUserToRoom,
   disconnect,
   updateRoom,
+  addShips,
 } from './controllers/index';
 
 const wss = new WebSocketServer(
@@ -54,6 +55,15 @@ wss.on('connection', (ws, req) => {
         });
         updateRoom({
           broadcast,
+        });
+        break;
+      }
+
+      case RESPONSE_TYPES.ADD_SHIPS: {
+        addShips({
+          connectionId,
+          data: JSON.parse(data),
+          callback,
         });
         break;
       }

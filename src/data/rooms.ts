@@ -1,4 +1,4 @@
-import { Room } from '../types/generelTypes';
+import { Room } from '../types/generalTypes';
 
 const rooms: Room[] = [];
 

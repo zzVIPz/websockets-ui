@@ -1,6 +1,6 @@
 import { WebSocket } from 'ws';
 import { clients, users } from '../../data/index';
-import { RESPONSE_TYPES, User } from '../../types/generelTypes';
+import { RESPONSE_TYPES, User } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 
 interface IRegistration {

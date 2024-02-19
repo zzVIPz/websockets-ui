@@ -1,4 +1,4 @@
-import { UserData } from '../types/generelTypes';
+import { UserData } from '../types/generalTypes';
 
 const users: UserData[] = [];
 

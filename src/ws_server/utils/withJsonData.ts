@@ -1,13 +1,19 @@
 import {
-  GameDataPayload,
-  RoomDataPayload,
-  UserDataPayload,
+  GameDataResponsePayload,
+  RoomDataRequestPayload,
+  ShipsDataResponsePayload,
+  UserDataResponsePayload,
 } from '../../types/apiTypes';
-import { RESPONSE_TYPES, Room } from '../../types/generelTypes';
+import { RESPONSE_TYPES, Room } from '../../types/generalTypes';
 
 const withJsonData = (
   type: RESPONSE_TYPES,
-  data: UserDataPayload | RoomDataPayload | Room[] | GameDataPayload
+  data:
+    | UserDataResponsePayload
+    | RoomDataRequestPayload
+    | GameDataResponsePayload
+    | ShipsDataResponsePayload
+    | Room[]
 ) =>
   JSON.stringify({
     type,
