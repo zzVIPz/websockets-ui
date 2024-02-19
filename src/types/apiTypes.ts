@@ -16,3 +16,8 @@ export interface UserDataPayload {
 export interface RoomDataPayload {
   indexRoom: number;
 }
+
+export interface GameDataPayload {
+  idGame: number;
+  idPlayer: number;
+}

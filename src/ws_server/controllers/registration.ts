@@ -1,14 +1,17 @@
-import users from '../../data/users';
+import { WebSocket } from 'ws';
+import { clients, users } from '../../data/index';
 import { RESPONSE_TYPES, User } from '../../types/generelTypes';
 import withJsonData from '../utils/withJsonData';
 
 interface IRegistration {
+  client: WebSocket;
   connectionId: number;
   data: User;
   callback: (payload: string) => void;
 }
 
 export const registration = ({
+  client,
   connectionId,
   data: { name, password },
   callback,
@@ -16,6 +19,7 @@ export const registration = ({
   const isReservedName = users.some(({ name: userName }) => userName === name);
 
   if (!isReservedName) {
+    clients.set(connectionId, client);
     users.push({ name, password, index: connectionId });
   }
 

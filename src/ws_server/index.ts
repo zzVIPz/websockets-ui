@@ -1,8 +1,14 @@
-import { WebSocketServer } from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { getRandomNumber, print } from '../utils/index';
 import { RESPONSE_TYPES } from '../types/generelTypes';
 import { UserLoginRequest } from '../types/apiTypes';
-import { registration, createRoom, addUserToRoom } from './controllers/index';
+import {
+  registration,
+  createRoom,
+  addUserToRoom,
+  disconnect,
+  updateRoom,
+} from './controllers/index';
 
 const wss = new WebSocketServer(
   {
@@ -13,27 +19,41 @@ const wss = new WebSocketServer(
 
 wss.on('connection', (ws, req) => {
   const connectionId = getRandomNumber();
+  const callback = (message: string) => ws.send(message);
+  const broadcast = (message: string) =>
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) client.send(message);
+    });
 
   ws.on('error', (error) => console.log(error));
   ws.on('message', (message) => {
     const { type, data }: UserLoginRequest = JSON.parse(message.toString());
-    const callback = (response: string) => ws.send(response);
 
     switch (type) {
       case RESPONSE_TYPES.REG:
         registration({
+          client: ws,
           connectionId,
           data: JSON.parse(data),
           callback,
         });
         break;
-      case RESPONSE_TYPES.CREATE_ROOM: {
-        const indexRoom = connectionId + Date.now();
 
-        createRoom(indexRoom);
+      case RESPONSE_TYPES.CREATE_ROOM: {
+        createRoom(connectionId);
+        updateRoom({
+          broadcast,
+        });
+        break;
+      }
+
+      case RESPONSE_TYPES.ADD_USER: {
         addUserToRoom({
-          indexRoom,
-          callback,
+          connectionId,
+          data: JSON.parse(data),
+        });
+        updateRoom({
+          broadcast,
         });
         break;
       }
@@ -41,6 +61,9 @@ wss.on('connection', (ws, req) => {
   });
 
   ws.on('close', () => {
-    print(`Client ${connectionId} disconnected`, 'blue');
+    disconnect(connectionId);
+    updateRoom({
+      broadcast,
+    });
   });
 });
