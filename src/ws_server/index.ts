@@ -1,6 +1,6 @@
 import WebSocket, { WebSocketServer } from 'ws';
 import { getRandomNumber, print } from '../utils/index';
-import { RESPONSE_TYPES } from '../types/generalTypes';
+import { MESSAGE_TYPES } from '../types/generalTypes';
 import { UserLoginRequest } from '../types/apiTypes';
 import {
   registration,
@@ -9,6 +9,8 @@ import {
   disconnect,
   updateRoom,
   addShips,
+  attack,
+  randomAttack,
 } from './controllers/index';
 
 const wss = new WebSocketServer(
@@ -31,7 +33,7 @@ wss.on('connection', (ws, req) => {
     const { type, data }: UserLoginRequest = JSON.parse(message.toString());
 
     switch (type) {
-      case RESPONSE_TYPES.REG:
+      case MESSAGE_TYPES.REG:
         registration({
           client: ws,
           connectionId,
@@ -40,7 +42,7 @@ wss.on('connection', (ws, req) => {
         });
         break;
 
-      case RESPONSE_TYPES.CREATE_ROOM: {
+      case MESSAGE_TYPES.CREATE_ROOM: {
         createRoom(connectionId);
         updateRoom({
           broadcast,
@@ -48,7 +50,7 @@ wss.on('connection', (ws, req) => {
         break;
       }
 
-      case RESPONSE_TYPES.ADD_USER: {
+      case MESSAGE_TYPES.ADD_USER: {
         addUserToRoom({
           connectionId,
           data: JSON.parse(data),
@@ -59,8 +61,25 @@ wss.on('connection', (ws, req) => {
         break;
       }
 
-      case RESPONSE_TYPES.ADD_SHIPS: {
+      case MESSAGE_TYPES.ADD_SHIPS: {
         addShips({
+          connectionId,
+          data: JSON.parse(data),
+        });
+        break;
+      }
+
+      case MESSAGE_TYPES.ATTACK: {
+        attack({
+          connectionId,
+          data: JSON.parse(data),
+          callback,
+        });
+        break;
+      }
+
+      case MESSAGE_TYPES.RANDOM_ATTACK: {
+        randomAttack({
           connectionId,
           data: JSON.parse(data),
           callback,
