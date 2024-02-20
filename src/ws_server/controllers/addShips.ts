@@ -1,19 +1,39 @@
-// import { clients, rooms } from '../../data/index';
+import { clients, games } from '../../data/index';
 import { ShipsDataRequestPayload } from '../../types/apiTypes';
-import { RESPONSE_TYPES } from '../../types/generalTypes';
+import { MESSAGE_TYPES } from '../../types/generalTypes';
+import getShipsHealth from '../utils/getShipsHealth';
 import withJsonData from '../utils/withJsonData';
+import { turn } from './turn';
 
 interface IAddShips {
   connectionId: number;
   data: ShipsDataRequestPayload;
-  callback: (payload: string) => void;
 }
 
-export const addShips = ({ connectionId, data, callback }: IAddShips) => {
-  callback(
-    withJsonData(RESPONSE_TYPES.START, {
-      ships: data.ships,
-      currentPlayerIndex: connectionId,
-    })
-  );
+export const addShips = ({
+  connectionId,
+  data: { gameId, ships },
+}: IAddShips) => {
+  const currentGame = games.get(gameId);
+
+  currentGame.ships = {
+    ...currentGame.ships,
+    [connectionId]: {
+      ships,
+      shipsHealth: getShipsHealth(ships),
+    },
+  };
+
+  if (Object.keys(currentGame.ships).length === 2) {
+    currentGame.playersId.forEach((currentPlayerIndex) => {
+      const client = clients.get(currentPlayerIndex);
+      client.send(
+        withJsonData(MESSAGE_TYPES.START, {
+          ships,
+          currentPlayerIndex,
+        })
+      );
+    });
+    turn({ playersId: currentGame.playersId, currentPlayer: currentGame.turn });
+  }
 };

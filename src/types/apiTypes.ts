@@ -1,7 +1,7 @@
-import { RESPONSE_TYPES, Ship } from './generalTypes';
+import { ATTACK_STATUS, MESSAGE_TYPES, Ship } from './generalTypes';
 
 export interface UserLoginRequest {
-  type: RESPONSE_TYPES;
+  type: MESSAGE_TYPES;
   data: string;
   id: number;
 }
@@ -13,6 +13,18 @@ export interface RoomDataRequestPayload {
 export interface ShipsDataRequestPayload {
   gameId: number;
   ships: Ship[];
+  indexPlayer: number;
+}
+
+export interface AttackDataRequestPayload {
+  gameId: number;
+  x: number;
+  y: number;
+  indexPlayer: number;
+}
+
+export interface RandomAttackRequestPayload {
+  gameId: number;
   indexPlayer: number;
 }
 
@@ -31,4 +43,17 @@ export interface GameDataResponsePayload {
 export interface ShipsDataResponsePayload {
   ships: Ship[];
   currentPlayerIndex: number;
+}
+
+export interface AttackDataResponsePayload {
+  position: {
+    x: number;
+    y: number;
+  };
+  currentPlayer: number;
+  status: ATTACK_STATUS;
+}
+
+export interface TurnDataResponsePayload {
+  currentPlayer: number;
 }

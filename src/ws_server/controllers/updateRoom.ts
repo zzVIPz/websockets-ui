@@ -1,5 +1,5 @@
 import { rooms } from '../../data/index';
-import { RESPONSE_TYPES } from '../../types/generalTypes';
+import { MESSAGE_TYPES } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 
 interface IUpdateRoom {
@@ -7,5 +7,5 @@ interface IUpdateRoom {
 }
 
 export const updateRoom = ({ broadcast }: IUpdateRoom) => {
-  broadcast(withJsonData(RESPONSE_TYPES.UPDATE_ROOM, rooms));
+  broadcast(withJsonData(MESSAGE_TYPES.UPDATE_ROOM, rooms));
 };

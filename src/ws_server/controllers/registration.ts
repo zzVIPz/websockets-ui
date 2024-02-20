@@ -1,6 +1,6 @@
 import { WebSocket } from 'ws';
 import { clients, users } from '../../data/index';
-import { RESPONSE_TYPES, User } from '../../types/generalTypes';
+import { MESSAGE_TYPES, User } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 
 interface IRegistration {
@@ -24,7 +24,7 @@ export const registration = ({
   }
 
   callback(
-    withJsonData(RESPONSE_TYPES.REG, {
+    withJsonData(MESSAGE_TYPES.REG, {
       name,
       index: connectionId,
       error: isReservedName,

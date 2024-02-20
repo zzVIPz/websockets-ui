@@ -1,11 +1,11 @@
-import { clients, rooms } from '../../data/index';
-import { RoomDataPayload } from '../../types/apiTypes';
-import { RESPONSE_TYPES } from '../../types/generelTypes';
+import { clients, rooms, games } from '../../data/index';
+import { RoomDataRequestPayload } from '../../types/apiTypes';
+import { MESSAGE_TYPES } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 
 interface IAddUserToRoom {
   connectionId: number;
-  data: RoomDataPayload;
+  data: RoomDataRequestPayload;
 }
 
 export const addUserToRoom = ({
@@ -18,7 +18,7 @@ export const addUserToRoom = ({
     if (matchRoomIdx !== -1) {
       const {
         roomId,
-        roomUsers: [{ index }],
+        roomUsers: [{ index: enemyId }],
       } = rooms[matchRoomIdx];
 
       rooms.splice(matchRoomIdx, 1);
@@ -29,9 +29,18 @@ export const addUserToRoom = ({
 
       if (selfUserRoomId !== -1) rooms.splice(selfUserRoomId, 1);
 
-      [index, connectionId].forEach((idPlayer) => {
+      const playersId = [enemyId, connectionId];
+
+      games.set(roomId, {
+        gameId: roomId,
+        playersId,
+        turn: enemyId > connectionId ? connectionId : enemyId,
+        ships: {},
+      });
+
+      playersId.forEach((idPlayer) => {
         clients.get(idPlayer).send(
-          withJsonData(RESPONSE_TYPES.CREATE_GAME, {
+          withJsonData(MESSAGE_TYPES.CREATE_GAME, {
             idGame: roomId,
             idPlayer,
           })

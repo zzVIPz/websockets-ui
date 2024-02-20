@@ -4,12 +4,18 @@ import { addUserToRoom } from './addUserToRoom';
 import { disconnect } from './disconnect';
 import { updateRoom } from './updateRoom';
 import { addShips } from './addShips';
+import { attack } from './attack';
+import { turn } from './turn';
+import { randomAttack } from './randomAttack';
 
 export {
-  registration,
-  createRoom,
+  addShips,
+  attack,
   addUserToRoom,
   disconnect,
+  createRoom,
+  registration,
   updateRoom,
-  addShips,
+  turn,
+  randomAttack,
 };
