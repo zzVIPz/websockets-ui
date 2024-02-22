@@ -1,5 +1,6 @@
+import { games } from '../../data';
 import { RandomAttackRequestPayload } from '../../types/apiTypes';
-import { getRandomDigit } from '../../utils/getRandomNumber';
+import { getRandomFromArray } from '../../utils/getRandomNumber';
 import { attack } from './attack';
 
 interface IRandomAttack {
@@ -13,12 +14,15 @@ export const randomAttack = ({
   data: { gameId },
   callback,
 }: IRandomAttack) => {
+  const currentGame = games.get(gameId);
+  const [x, y] = getRandomFromArray(currentGame.shots[connectionId]);
+
   attack({
     connectionId,
     data: {
       gameId,
-      x: getRandomDigit(),
-      y: getRandomDigit(),
+      x: parseInt(x),
+      y: parseInt(y),
       indexPlayer: connectionId,
     },
     callback,

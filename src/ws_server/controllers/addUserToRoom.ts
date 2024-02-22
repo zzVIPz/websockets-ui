@@ -1,6 +1,7 @@
 import { clients, rooms, games } from '../../data/index';
 import { RoomDataRequestPayload } from '../../types/apiTypes';
 import { MESSAGE_TYPES } from '../../types/generalTypes';
+import { getBoardShots } from '../utils/shotStatistic';
 import withJsonData from '../utils/withJsonData';
 
 interface IAddUserToRoom {
@@ -36,6 +37,10 @@ export const addUserToRoom = ({
         playersId,
         turn: enemyId > connectionId ? connectionId : enemyId,
         ships: {},
+        shots: {
+          [enemyId]: getBoardShots(),
+          [connectionId]: getBoardShots(),
+        },
       });
 
       playersId.forEach((idPlayer) => {

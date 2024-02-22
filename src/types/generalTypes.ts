@@ -53,4 +53,7 @@ export interface GameData {
       shipsHealth: string[];
     };
   };
+  shots: {
+    [playerId: number]: string[];
+  };
 }
