@@ -11,6 +11,7 @@ import {
   addShips,
   attack,
   randomAttack,
+  updateWinners,
 } from './controllers/index';
 
 const wss = new WebSocketServer(
@@ -40,13 +41,13 @@ wss.on('connection', (ws, req) => {
           data: JSON.parse(data),
           callback,
         });
+        broadcast(updateWinners());
         break;
 
       case MESSAGE_TYPES.CREATE_ROOM: {
         createRoom(connectionId);
-        updateRoom({
-          broadcast,
-        });
+        broadcast(updateRoom());
+        broadcast(updateWinners());
         break;
       }
 
@@ -55,9 +56,7 @@ wss.on('connection', (ws, req) => {
           connectionId,
           data: JSON.parse(data),
         });
-        updateRoom({
-          broadcast,
-        });
+        broadcast(updateRoom());
         break;
       }
 
@@ -74,6 +73,7 @@ wss.on('connection', (ws, req) => {
           connectionId,
           data: JSON.parse(data),
           callback,
+          broadcast,
         });
         break;
       }
@@ -83,6 +83,7 @@ wss.on('connection', (ws, req) => {
           connectionId,
           data: JSON.parse(data),
           callback,
+          broadcast,
         });
         break;
       }
@@ -91,8 +92,6 @@ wss.on('connection', (ws, req) => {
 
   ws.on('close', () => {
     disconnect(connectionId);
-    updateRoom({
-      broadcast,
-    });
+    broadcast(updateRoom());
   });
 });

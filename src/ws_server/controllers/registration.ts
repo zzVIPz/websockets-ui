@@ -20,7 +20,7 @@ export const registration = ({
 
   if (!isReservedName) {
     clients.set(connectionId, client);
-    users.push({ name, password, index: connectionId });
+    users.push({ name, password, index: connectionId, wins: 0 });
   }
 
   callback(

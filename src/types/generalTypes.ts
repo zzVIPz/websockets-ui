@@ -26,6 +26,7 @@ export interface User {
 
 export interface UserData extends User {
   index: number;
+  wins: number;
 }
 
 export interface Room {

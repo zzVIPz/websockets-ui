@@ -7,6 +7,7 @@ import { addShips } from './addShips';
 import { attack } from './attack';
 import { turn } from './turn';
 import { randomAttack } from './randomAttack';
+import { updateWinners } from './updateWinners';
 
 export {
   addShips,
@@ -18,4 +19,5 @@ export {
   updateRoom,
   turn,
   randomAttack,
+  updateWinners,
 };

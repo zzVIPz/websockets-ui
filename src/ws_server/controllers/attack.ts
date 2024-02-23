@@ -1,21 +1,25 @@
 import { AttackDataRequestPayload } from '../../types/apiTypes';
-import { games } from '../../data';
+import { games, users } from '../../data';
 import { ATTACK_STATUS, MESSAGE_TYPES } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 import { turn } from './turn';
 import getSurroundingShots from '../utils/getSurroundingShots';
 import { getAvailableShots } from '../utils/shotStatistic';
+import { finish } from './finish';
+import { updateWinners } from './updateWinners';
 
 interface IAttack {
   connectionId: number;
   data: AttackDataRequestPayload;
   callback: (payload: string) => void;
+  broadcast: (payload: string) => void;
 }
 
 export const attack = ({
   connectionId,
   data: { gameId, x, y },
   callback,
+  broadcast,
 }: IAttack) => {
   const currentGame = games.get(gameId);
   const cell = `${x}${y}`;
@@ -92,7 +96,26 @@ export const attack = ({
       });
     }
 
-    turn({ playersId: currentGame.playersId, currentPlayer: currentGame.turn });
+    if (enemyShipsHealth.every((ship) => !ship.length)) {
+      const winnerIdx = users.findIndex(({ index }) => index === connectionId);
+
+      users[winnerIdx] = {
+        ...users[winnerIdx],
+        wins: users[winnerIdx].wins + 1,
+      };
+
+      finish({
+        playersId: currentGame.playersId,
+        winPlayer: currentGame.turn,
+      });
+      broadcast(updateWinners());
+      return;
+    }
+
+    turn({
+      playersId: currentGame.playersId,
+      currentPlayer: currentGame.turn,
+    });
   } else {
     turn({
       playersId: currentGame.playersId,

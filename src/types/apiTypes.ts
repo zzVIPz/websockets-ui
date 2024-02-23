@@ -57,3 +57,11 @@ export interface AttackDataResponsePayload {
 export interface TurnDataResponsePayload {
   currentPlayer: number;
 }
+
+export interface FinishDataResponsePayload {
+  winPlayer: number;
+}
+export interface WinnersDataResponsePayload {
+  name: string;
+  wins: number;
+}

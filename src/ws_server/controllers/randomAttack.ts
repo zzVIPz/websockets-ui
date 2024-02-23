@@ -7,12 +7,14 @@ interface IRandomAttack {
   connectionId: number;
   data: RandomAttackRequestPayload;
   callback: (payload: string) => void;
+  broadcast: (payload: string) => void;
 }
 
 export const randomAttack = ({
   connectionId,
   data: { gameId },
   callback,
+  broadcast,
 }: IRandomAttack) => {
   const currentGame = games.get(gameId);
   const [x, y] = getRandomFromArray(currentGame.shots[connectionId]);
@@ -26,5 +28,6 @@ export const randomAttack = ({
       indexPlayer: connectionId,
     },
     callback,
+    broadcast,
   });
 };
