@@ -12,7 +12,7 @@ const getBoardShots = () => {
 
 const getAvailableShots = (
   availableShots: string[],
-  currentShots: [x: number, y: number][]
+  currentShots: number[][]
 ) => {
   const formattedCurrentShots = currentShots.map(([x, y]) => `${x}${y}`);
 
