@@ -13,6 +13,7 @@ import {
   randomAttack,
   updateWinners,
 } from './controllers/index';
+import { placeShips } from './utils/placeShips';
 
 const wss = new WebSocketServer(
   {
@@ -72,7 +73,6 @@ wss.on('connection', (ws, req) => {
         attack({
           connectionId,
           data: JSON.parse(data),
-          callback,
           broadcast,
         });
         break;
@@ -82,7 +82,24 @@ wss.on('connection', (ws, req) => {
         randomAttack({
           connectionId,
           data: JSON.parse(data),
-          callback,
+          broadcast,
+        });
+        break;
+      }
+
+      case MESSAGE_TYPES.SINGLE: {
+        createRoom(connectionId);
+        addUserToRoom({
+          connectionId: -connectionId,
+          data: { indexRoom: connectionId },
+        });
+        addShips({
+          connectionId: -connectionId,
+          data: {
+            gameId: connectionId,
+            ships: placeShips(),
+            indexPlayer: -connectionId,
+          },
           broadcast,
         });
         break;

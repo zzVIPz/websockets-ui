@@ -6,14 +6,12 @@ import { attack } from './attack';
 interface IRandomAttack {
   connectionId: number;
   data: RandomAttackRequestPayload;
-  callback: (payload: string) => void;
   broadcast: (payload: string) => void;
 }
 
 export const randomAttack = ({
   connectionId,
   data: { gameId },
-  callback,
   broadcast,
 }: IRandomAttack) => {
   const currentGame = games.get(gameId);
@@ -27,7 +25,6 @@ export const randomAttack = ({
       y: parseInt(y),
       indexPlayer: connectionId,
     },
-    callback,
     broadcast,
   });
 };

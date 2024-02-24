@@ -6,7 +6,7 @@ export const getRandomNumber = () => {
 
 export const getRandomDigit = () => parseInt(`${getRandomNumber()}`.slice(-1));
 
-export const getRandomFromArray = (arr) => {
+export const getRandomFromArray = (arr: string[]) => {
   const randomIndex = Math.floor(Math.random() * arr.length);
 
   return arr[randomIndex];

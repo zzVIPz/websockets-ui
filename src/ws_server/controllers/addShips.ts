@@ -8,11 +8,13 @@ import { turn } from './turn';
 interface IAddShips {
   connectionId: number;
   data: ShipsDataRequestPayload;
+  broadcast?: (payload: string) => void;
 }
 
 export const addShips = ({
   connectionId,
   data: { gameId, ships },
+  broadcast,
 }: IAddShips) => {
   const currentGame = games.get(gameId);
 
@@ -27,13 +29,19 @@ export const addShips = ({
   if (Object.keys(currentGame.ships).length === 2) {
     currentGame.playersId.forEach((currentPlayerIndex) => {
       const client = clients.get(currentPlayerIndex);
-      client.send(
+
+      client?.send(
         withJsonData(MESSAGE_TYPES.START, {
-          ships,
+          ships: currentGame.ships[currentPlayerIndex].ships,
           currentPlayerIndex,
         })
       );
     });
-    turn({ playersId: currentGame.playersId, currentPlayer: currentGame.turn });
+
+    turn({
+      playersId: currentGame.playersId,
+      currentPlayer: currentGame.turn,
+      broadcast,
+    });
   }
 };

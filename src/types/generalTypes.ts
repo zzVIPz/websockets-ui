@@ -11,6 +11,7 @@ export const enum MESSAGE_TYPES {
   UPDATE_WINNERS = 'update_winners',
   ADD_USER = 'add_user_to_room',
   ADD_SHIPS = 'add_ships',
+  SINGLE = 'single_play',
 }
 
 export enum ATTACK_STATUS {
@@ -34,6 +35,7 @@ export interface Room {
   roomUsers: [{ index: number; name: string }];
 }
 
+export type ShipType = 'small' | 'medium' | 'large' | 'huge';
 export interface Ship {
   position: {
     x: number;
@@ -41,7 +43,7 @@ export interface Ship {
   };
   direction: boolean;
   length: number;
-  type: 'small' | 'medium' | 'large' | 'huge';
+  type: ShipType;
 }
 
 export interface GameData {

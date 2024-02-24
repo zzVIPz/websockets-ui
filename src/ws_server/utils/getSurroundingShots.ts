@@ -3,7 +3,7 @@ const getSurroundingShots = (
   length: number,
   direction: boolean
 ) => {
-  const surroundingShots = [];
+  const surroundingShots: number[][] = [];
 
   if (direction) {
     for (let i = x - 1; i <= x + 1; i++) {

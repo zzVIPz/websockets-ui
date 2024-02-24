@@ -1,5 +1,5 @@
 import { AttackDataRequestPayload } from '../../types/apiTypes';
-import { games, users } from '../../data';
+import { clients, games, users } from '../../data';
 import { ATTACK_STATUS, MESSAGE_TYPES } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 import { turn } from './turn';
@@ -11,14 +11,12 @@ import { updateWinners } from './updateWinners';
 interface IAttack {
   connectionId: number;
   data: AttackDataRequestPayload;
-  callback: (payload: string) => void;
   broadcast: (payload: string) => void;
 }
 
 export const attack = ({
   connectionId,
   data: { gameId, x, y },
-  callback,
   broadcast,
 }: IAttack) => {
   const currentGame = games.get(gameId);
@@ -41,7 +39,7 @@ export const attack = ({
       currentPlayer: connectionId,
       status: ATTACK_STATUS.miss,
     };
-    const splashAttack = [];
+    const splashAttack: number[][] = [];
 
     currentGame.shots[connectionId] = availableShots.filter(
       (shot) => shot !== cell
@@ -80,35 +78,43 @@ export const attack = ({
 
     currentGame.shots[connectionId] = shotsData;
 
-    callback(withJsonData(MESSAGE_TYPES.ATTACK, payload));
-    if (splashAttack.length) {
-      splashAttack.forEach(([x, y]) => {
-        callback(
-          withJsonData(MESSAGE_TYPES.ATTACK, {
-            ...payload,
-            position: {
-              x,
-              y,
-            },
-            status: ATTACK_STATUS.miss,
-          })
-        );
-      });
-    }
+    currentGame.playersId.forEach((currentPlayerIndex) => {
+      const client = clients.get(currentPlayerIndex);
+
+      client?.send(withJsonData(MESSAGE_TYPES.ATTACK, payload));
+
+      if (splashAttack.length) {
+        splashAttack.forEach(([x, y]) => {
+          client?.send(
+            withJsonData(MESSAGE_TYPES.ATTACK, {
+              ...payload,
+              position: {
+                x,
+                y,
+              },
+              status: ATTACK_STATUS.miss,
+            })
+          );
+        });
+      }
+    });
 
     if (enemyShipsHealth.every((ship) => !ship.length)) {
       const winnerIdx = users.findIndex(({ index }) => index === connectionId);
 
-      users[winnerIdx] = {
-        ...users[winnerIdx],
-        wins: users[winnerIdx].wins + 1,
-      };
+      if (winnerIdx !== -1) {
+        users[winnerIdx] = {
+          ...users[winnerIdx],
+          wins: users[winnerIdx].wins + 1,
+        };
+      }
 
       finish({
+        gameId,
         playersId: currentGame.playersId,
         winPlayer: currentGame.turn,
       });
-      broadcast(updateWinners());
+      broadcast?.(updateWinners());
       return;
     }
 

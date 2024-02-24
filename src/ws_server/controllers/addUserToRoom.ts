@@ -44,7 +44,7 @@ export const addUserToRoom = ({
       });
 
       playersId.forEach((idPlayer) => {
-        clients.get(idPlayer).send(
+        clients.get(idPlayer)?.send(
           withJsonData(MESSAGE_TYPES.CREATE_GAME, {
             idGame: roomId,
             idPlayer,
