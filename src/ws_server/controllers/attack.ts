@@ -1,13 +1,11 @@
 import { AttackDataRequestPayload } from '../../types/apiTypes';
-import { clients, games, users } from '../../data';
+import { clients, games } from '../../data';
 import { ATTACK_STATUS, MESSAGE_TYPES } from '../../types/generalTypes';
 import withJsonData from '../utils/withJsonData';
 import { turn } from './turn';
 import getSurroundingShots from '../utils/getSurroundingShots';
 import { getAvailableShots } from '../utils/shotStatistic';
 import { finish } from './finish';
-import { updateWinners } from './updateWinners';
-
 interface IAttack {
   connectionId: number;
   data: AttackDataRequestPayload;
@@ -100,21 +98,12 @@ export const attack = ({
     });
 
     if (enemyShipsHealth.every((ship) => !ship.length)) {
-      const winnerIdx = users.findIndex(({ index }) => index === connectionId);
-
-      if (winnerIdx !== -1) {
-        users[winnerIdx] = {
-          ...users[winnerIdx],
-          wins: users[winnerIdx].wins + 1,
-        };
-      }
-
       finish({
         gameId,
         playersId: currentGame.playersId,
         winPlayer: currentGame.turn,
+        broadcast,
       });
-      broadcast?.(updateWinners());
       return;
     }
 

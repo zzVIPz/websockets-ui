@@ -29,6 +29,10 @@ wss.on('connection', (ws, req) => {
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) client.send(message);
     });
+  const broadcastGameInfo = () => {
+    broadcast(updateRoom());
+    broadcast(updateWinners());
+  };
 
   ws.on('error', (error) => console.log(error));
   ws.on('message', (message) => {
@@ -42,13 +46,12 @@ wss.on('connection', (ws, req) => {
           data: JSON.parse(data),
           callback,
         });
-        broadcast(updateWinners());
+        broadcastGameInfo();
         break;
 
       case MESSAGE_TYPES.CREATE_ROOM: {
         createRoom(connectionId);
-        broadcast(updateRoom());
-        broadcast(updateWinners());
+        broadcastGameInfo();
         break;
       }
 
@@ -109,6 +112,6 @@ wss.on('connection', (ws, req) => {
 
   ws.on('close', () => {
     disconnect(connectionId);
-    broadcast(updateRoom());
+    broadcastGameInfo();
   });
 });
