@@ -5,8 +5,8 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "webpack",
-        "start:http:prod": "nodemon dist/http.js",
-        "start:wss:prod": "nodemon dist/wss.js",
+        "start:http:prod": "node dist/http.js",
+        "start:wss:prod": "node dist/wss.js",
         "start:http": "nodemon ./index.ts",
         "start:wss": "nodemon ./src/ws_server/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
