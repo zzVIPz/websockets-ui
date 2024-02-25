@@ -38,5 +38,5 @@ export const disconnect = (connectionId: number) => {
   }
 
   clients.delete(connectionId);
-  print(`User ${username} disconnected`, 'blue');
+  print(`User ${username ?? connectionId} disconnected`, 'blue');
 };

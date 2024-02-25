@@ -19,10 +19,17 @@ const wss = new WebSocketServer(
   {
     port: 3000,
   },
-  () => print(`Running a WebSocket server on port 3000`, 'blue')
+  () => {
+    print(`Running a WebSocket server on port 3000`, 'blue');
+    print(`Server parameters:`, 'green');
+
+    Object.entries(wss.options).forEach(([key, value]) => {
+      if (key !== 'WebSocket') console.log(`${key}: ${value}`);
+    });
+  }
 );
 
-wss.on('connection', (ws, req) => {
+wss.on('connection', (ws) => {
   const connectionId = getRandomNumber();
   const callback = (message: string) => ws.send(message);
   const broadcast = (message: string) =>
@@ -32,6 +39,12 @@ wss.on('connection', (ws, req) => {
   const broadcastGameInfo = () => {
     broadcast(updateRoom());
     broadcast(updateWinners());
+
+    if (ws.readyState === WebSocket.OPEN)
+      print(
+        `Client ${connectionId} logged in on server port ${wss.options.port}`,
+        'green'
+      );
   };
 
   ws.on('error', (error) => console.log(error));
