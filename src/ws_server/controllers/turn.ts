@@ -32,6 +32,6 @@ export const turn = ({ playersId, currentPlayer, broadcast }: ITurn) => {
         },
         broadcast,
       });
-    }, 100);
+    }, 750);
   }
 };

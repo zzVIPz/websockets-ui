@@ -2,10 +2,12 @@
     "name": "ws_task",
     "version": "1.0.0",
     "description": "Websocket battleship",
-    "main": "index.ts",
+    "main": "dist/index.js",
     "scripts": {
-        "start": "node ./index.ts",
-        "start:dev": "nodemon ./index.ts",
+        "build": "webpack",
+        "start:http:prod": "nodemon dist/http.js",
+        "start:wss:prod": "nodemon dist/wss.js",
+        "start:http": "nodemon ./index.ts",
         "start:wss": "nodemon ./src/ws_server/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -14,7 +16,12 @@
     "license": "ISC",
     "devDependencies": {
         "@types/node": "^20.11.19",
-        "nodemon": "^2.0.16"
+        "@types/ws": "^8.5.10",
+        "nodemon": "^2.0.16",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.3.3",
+        "webpack": "^5.90.3",
+        "webpack-cli": "^5.1.4"
     },
     "dependencies": {
         "ws": "^8.8.0"
